@@ -1,10 +1,14 @@
 from fastapi import FastAPI
+from app.core.database import Base, engine
+from app.models.user import User  # ← THIS IS THE KEY LINE
+from app.routers.auth import router as auth_router
 
-app = FastAPI(
-    title="Hospital Management System with AI",
-    version="1.0.0"
-)
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Hospital AI System")
+
+app.include_router(auth_router)
 
 @app.get("/")
 def root():
-    return {"message": "Hospital AI System is running 🚀"}
+    return {"status": "OK"}
