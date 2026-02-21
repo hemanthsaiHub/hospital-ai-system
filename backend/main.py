@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import Base, engine
 from app.models.user import User
 from app.models.doctor import Doctor
@@ -14,16 +15,24 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Hospital AI System")
 
+# ← ADD THIS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(auth_router)
 app.include_router(doctor_router)
 app.include_router(patient_router)
 app.include_router(appointment_router)
 app.include_router(admin_router)
 
-@app.get("/", tags=["Root"])  # ← ADD tags=["Root"] HERE
+@app.get("/", tags=["Root"])
 def root():
     return {"status": "OK"}
-
 
 
 
