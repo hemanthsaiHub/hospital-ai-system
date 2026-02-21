@@ -1,3 +1,5 @@
+
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import Base, engine
@@ -15,10 +17,12 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Hospital AI System")
 
-# ← ADD THIS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://hospital-ai-system.netlify.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -33,6 +37,3 @@ app.include_router(admin_router)
 @app.get("/", tags=["Root"])
 def root():
     return {"status": "OK"}
-
-
-
